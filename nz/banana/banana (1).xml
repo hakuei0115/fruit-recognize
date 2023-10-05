@@ -1,0 +1,26 @@
+<annotation>
+	<folder>banana</folder>
+	<filename>banana (1).jpg</filename>
+	<path>C:\Users\Steve Lee\Downloads\fruit\nz\banana\banana (1).jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1200</width>
+		<height>1057</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>banana</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>50</xmin>
+			<ymin>41</ymin>
+			<xmax>1165</xmax>
+			<ymax>1018</ymax>
+		</bndbox>
+	</object>
+</annotation>

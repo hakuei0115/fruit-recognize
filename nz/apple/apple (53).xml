@@ -1,0 +1,26 @@
+<annotation>
+	<folder>apple</folder>
+	<filename>apple (53).jpg</filename>
+	<path>C:\Users\Steve Lee\Downloads\fruit\nz\apple\apple (53).jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>484</width>
+		<height>300</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>apple</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>111</xmin>
+			<ymin>47</ymin>
+			<xmax>369</xmax>
+			<ymax>288</ymax>
+		</bndbox>
+	</object>
+</annotation>
