@@ -1,13 +1,13 @@
 <annotation>
 	<folder>banana</folder>
-	<filename>banana (1).jpg</filename>
-	<path>C:\Users\Steve Lee\Downloads\fruit-recognize\nz\banana\banana (1).jpg</path>
+	<filename>banana (27).jpg</filename>
+	<path>C:\Users\Steve Lee\Downloads\fruit-recognize\nz\banana\banana (27).jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
 	<size>
-		<width>1200</width>
-		<height>1057</height>
+		<width>275</width>
+		<height>183</height>
 		<depth>3</depth>
 	</size>
 	<segmented>0</segmented>
@@ -17,10 +17,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>50</xmin>
-			<ymin>41</ymin>
-			<xmax>1165</xmax>
-			<ymax>1018</ymax>
+			<xmin>64</xmin>
+			<ymin>48</ymin>
+			<xmax>216</xmax>
+			<ymax>132</ymax>
 		</bndbox>
 	</object>
 </annotation>

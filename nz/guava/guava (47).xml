@@ -1,0 +1,38 @@
+<annotation>
+	<folder>guava</folder>
+	<filename>guava (47).jpg</filename>
+	<path>C:\Users\Steve Lee\Downloads\fruit-recognize\nz\guava\guava (47).jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>533</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>guava</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>61</xmin>
+			<ymin>83</ymin>
+			<xmax>364</xmax>
+			<ymax>384</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>guava</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>357</xmin>
+			<ymin>43</ymin>
+			<xmax>721</xmax>
+			<ymax>504</ymax>
+		</bndbox>
+	</object>
+</annotation>
