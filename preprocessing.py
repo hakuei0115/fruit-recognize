@@ -25,20 +25,6 @@ def preprocess_and_split_data(main_folder, target_size=(224, 224), test_size=0.2
                 # 讀取圖片
                 image = cv2.imread(image_path)
                 
-                # 識別資料較少的類別
-                is_data_augmentation_needed = (label == "Guava")
-                
-                # 如果是資料較少的類別，應用資料擴增
-                if is_data_augmentation_needed:
-                    # 隨機進行旋轉（隨機選擇旋轉角度）
-                    angle = np.random.randint(-30, 30)  # 隨機選擇旋轉角度（範圍可調整）
-                    M = cv2.getRotationMatrix2D((target_size[0] / 2, target_size[1] / 2), angle, 1)
-                    image = cv2.warpAffine(image, M, (target_size[0], target_size[1]))
-                    
-                    # 隨機進行水平翻轉
-                    if np.random.rand() > 0.5:
-                        image = cv2.flip(image, 1)
-                
                 # 調整大小
                 image = cv2.resize(image, target_size)
                 # 標準化圖片（將像素值縮放到0到1的範圍）
