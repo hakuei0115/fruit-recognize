@@ -44,7 +44,7 @@ for layer in base_model.layers:
     layer.trainable = False
 
 # 編譯模型
-model.compile(optimizer=Adam(lr=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
 
 # 訓練模型
 batch_size = 32
