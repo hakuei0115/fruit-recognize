@@ -13,6 +13,7 @@ class CalorieCalculator:
         "bell-fruit": 35.6, #蓮霧
         "grape": 62.7,
         "orange": 41.8,
+        "pineapple": 55.8,
     }
 
     def calculate_BMR(self, age, gender, height, weight):
@@ -52,12 +53,12 @@ def Recognize_images():
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    image_path = "recognize_image/apple.jpg" #這裡要替換成拍照跟讀取
+    image_path = "recognize_image/pineapple.jpg" #這裡要替換成拍照跟讀取
     image = cv2.imread(image_path)
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
 
-    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange"])}
+    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange", "pineapple"])}
     int_to_label = {i: label for label, i in label_to_int.items()}
 
     input_data = np.expand_dims(image, axis=0).astype(input_details[0]['dtype'])

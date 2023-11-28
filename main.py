@@ -15,6 +15,7 @@ calories_table = {
     "bell-fruit": 35.6, #蓮霧
     "grape": 62.7,
     "orange": 41.8,
+    "pineapple": 55.8,
 }
 
 def calculate_BMR(age, gender, height, weight):
@@ -56,7 +57,7 @@ def Recognize_images():
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
 
-    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "guava", "grape", "bell_fruit", "orange"])}
+    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "guava", "grape", "bell_fruit", "orange", "pineapple"])}
     int_to_label = {i: label for label, i in label_to_int.items()}
 
     input_data = np.expand_dims(image, axis=0).astype(input_details[0]['dtype'])

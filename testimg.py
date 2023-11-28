@@ -20,7 +20,7 @@ image = cv2.resize(image, (224, 224))  # 調整圖片大小
 predictions = model.predict(np.expand_dims(image, axis=0))
 
 # 創建標籤到整數的映射（與訓練時相同）
-label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange"])}  # 請替換成您的類別標籤
+label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange", "pineapple"])}  # 請替換成您的類別標籤
 
 # 創建反向映射，將整數類別映射回原始標籤
 int_to_label = {i: label for label, i in label_to_int.items()}
