@@ -49,7 +49,7 @@ def preprocess_and_split_data(main_folder, target_size=(224, 224), test_size=0.2
         pickle.dump(data, file)
 
 # 指定主資料夾的路徑
-main_folder = "nz"
+main_folder = "training"
 
 # 執行預處理並分割數據集
 preprocess_and_split_data(main_folder, test_size=0.2, validation_size=0.2)

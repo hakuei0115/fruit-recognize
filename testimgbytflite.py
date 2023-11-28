@@ -30,7 +30,7 @@ def Recognize_images():
     output_details = interpreter.get_output_details()
 
     # 加載測試圖像
-    image_path = "apple.jpg"  # 替換成您的測試圖像路徑
+    image_path = "recognize_image/apple.jpg"  # 替換成您的測試圖像路徑
     image = cv2.imread(image_path)  # 使用圖像處理庫讀取圖片
 
     # 對圖片進行像素值的歸一化處理，使其在0到1之間
