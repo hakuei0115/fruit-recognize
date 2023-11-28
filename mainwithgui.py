@@ -4,7 +4,7 @@ import tensorflow as tf
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 class CalorieCalculator:
     calories_table = {
@@ -123,9 +123,8 @@ class CalorieCalculatorApp:
         moderately_active_radio.grid(row=4, column=3, padx=5, pady=5)
         very_active_radio.grid(row=5, column=1, padx=5, pady=5)
         extremely_active_radio.grid(row=5, column=2, padx=5, pady=5)
-
-        # calculate_button.grid(row=6, column=0, columnspan=5, pady=10)
         submit_button.grid(row=6, column=0, columnspan=5, pady=10)
+
     def submit_button_click(self):
         user_age = self.entry_age.get()
         user_gender = self.gender_var.get()
@@ -167,9 +166,16 @@ class CalorieCalculatorApp:
         result_label2 = ttk.Label(root2, text="")
         result_label3 = ttk.Label(root2, text="")
 
-        image_path = "recognize_image/apple.jpg"  # 替換成你的影像檔案路徑
+        image_path = "recognize_image/apple.jpg"
         image = Image.open(image_path)
-        image = image.resize((100, 100))  # 調整大小為 100x100
+        image = image.resize((224, 224), Image.Resampling.LANCZOS)
+
+        draw = ImageDraw.Draw(image)
+        default_font = ImageFont.load_default()
+        font_size = 15
+        font = default_font.font_variant(size=font_size)
+        draw.text((20, 20), fruit_result, fill="red", font=font)
+
         photo = ImageTk.PhotoImage(image)
         image_label = ttk.Label(root2, image=photo)
         image_label.image = photo
