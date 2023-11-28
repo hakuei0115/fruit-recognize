@@ -132,13 +132,16 @@ class CalorieCalculatorApp:
         if not user_age or not user_gender or not user_height or not user_weight or not user_activity:
             messagebox.showerror("Error", "Please fill in all required fields.")
             return False
+        
+        if not user_age.isdigit() or not user_height.isdigit() or not user_weight.isdigit():
+            messagebox.showerror("Error", "Please enter valid numbers for age, height, and weight.")
+            return False
         else:
             result = messagebox.askquestion("Make sure fruit put on the scales", "Does the fruit on the scales?")
             if result == "yes":
                 self.on_calculate_button_click()
             else:
                 return False
-            pass
 
     def on_calculate_button_click(self):
         user_age = self.entry_age.get()
@@ -187,7 +190,6 @@ class CalorieCalculatorApp:
         result_label.grid(row=1, column=0, columnspan=2, padx=5, pady=20)
         result_label2.grid(row=2, column=0, columnspan=2, padx=5, pady=20)
         result_label3.grid(row=3, column=0, columnspan=2, padx=5, pady=20)
-        pass
 
 if __name__ == "__main__":
     calculator = CalorieCalculator()
