@@ -48,14 +48,14 @@ class CalorieCalculator:
 
 def Recognize_images():
     # cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    # cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-    ret, frame = cap.read()
+    # ret, frame = cap.read()
 
-    capture_path = "recognize_image/captured_image.jpg"
-    cv2.imwrite(capture_path, frame)
+    # capture_path = "recognize_image/captured_image.jpg"
+    # cv2.imwrite(capture_path, frame)
 
-    cap.release()
+    # cap.release()
 
     interpreter = tf.lite.Interpreter(model_path="fruit_lite_model.tflite")
     interpreter.allocate_tensors()
@@ -77,10 +77,15 @@ def Recognize_images():
 
     output_data = interpreter.get_tensor(output_details[0]['index'])
     predicted_class = np.argmax(output_data, axis=1)
-    predicted_label = int_to_label[predicted_class[0]]
 
-    return predicted_label
-    pass
+    threshold = 0.85
+    if output_data[0, predicted_class[0]] < threshold:
+        predicted_label = "unknown"
+    else:
+        predicted_label = int_to_label[predicted_class[0]]
+        predicted_probability = output_data[0, predicted_class[0]] * 100
+        
+    return predicted_label, predicted_probability
 
 class CalorieCalculatorApp:
     def __init__(self, root, calculator):
@@ -165,7 +170,7 @@ class CalorieCalculatorApp:
 
         fake_weight = 150; #這裡改成測重
 
-        fruit_result = Recognize_images()
+        fruit_result, fruit_probability = Recognize_images()
 
         calories = self.calculator.calculate_calories(fruit_result, fake_weight)
 
@@ -187,6 +192,7 @@ class CalorieCalculatorApp:
         font_size = 36
         font = default_font.font_variant(size=font_size)
         draw.text((10, 10), fruit_result, fill="red", font=font)
+        # draw.text((20, 20), fruit_probability, fill="red", font=font) #把預測機率話在圖上
 
         photo = ImageTk.PhotoImage(image)
         image_label = ttk.Label(root2, image=photo)

@@ -2,24 +2,6 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-calories_table = {
-    "apple": 46,
-    "banana": 91,
-    "guava": 37.3,
-    "bell-fruit": 35.6, #蓮霧
-    "grape": 00,
-    "orange": 00,
-}
-
-# 計算每克水果的卡路里函式
-def calculate_calories(fruit, weight):
-    if fruit in calories_table:
-        calories_per_gram = calories_table[fruit] / 100
-        total_calories = calories_per_gram * weight
-        return total_calories
-    else:
-        return "Can't find calories for this fruit.";
-
 def Recognize_images():
     # 載入 TensorFlow Lite 模型
     interpreter = tf.lite.Interpreter(model_path="fruit_lite_model.tflite")
@@ -30,7 +12,7 @@ def Recognize_images():
     output_details = interpreter.get_output_details()
 
     # 加載測試圖像
-    image_path = "recognize_image/apple.jpg"  # 替換成您的測試圖像路徑
+    image_path = "recognize_image/pineapple.jpg"  # 替換成您的測試圖像路徑
     image = cv2.imread(image_path)  # 使用圖像處理庫讀取圖片
 
     # 對圖片進行像素值的歸一化處理，使其在0到1之間
@@ -61,15 +43,19 @@ def Recognize_images():
     # 在預測結果中找到整數類別
     predicted_class = np.argmax(output_data, axis=1)
 
-    # 使用反向映射找到原始標籤
-    predicted_label = int_to_label[predicted_class[0]]
+    # 檢查預測機率是否低於某個閾值，表示模型對該預測不太確定
+    threshold = 0.85
+    if output_data[0, predicted_class[0]] < threshold:
+        predicted_label = "unknown"
+        print(f"Predicted class: {predicted_label}")
+    else:
+        # 取得預測標籤和相應的機率
+        predicted_label = int_to_label[predicted_class[0]]
+        predicted_probability = output_data[0, predicted_class[0]] * 100
+        # 顯示預測結果和機率
+        print(f"Predicted class: {predicted_label}")
+        print(f"Probability: {predicted_probability:.2f}")
+    return predicted_label, predicted_probability
 
-    return predicted_label
-
-fake_weight = 150;
-
-fruit_result = Recognize_images()
-
-calories = calculate_calories(fruit_result, fake_weight)
-
-print(f"The calories for {fruit_result} weighing {fake_weight} grams are: {calories} kcal")
+fruit_result, fruit_probability = Recognize_images()
+print(f"Predicted: {fruit_result}, {fruit_probability:.2f}%")
