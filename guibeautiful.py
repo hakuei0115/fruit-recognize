@@ -43,17 +43,27 @@ class CalorieCalculator:
             total_calories = calories_per_gram * weight
             return round(total_calories)
         else:
-            return "Can't find calories for this fruit.";
+            return "Can't find calories for this fruit."
         pass
 
 def Recognize_images():
+    # cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+    ret, frame = cap.read()
+
+    capture_path = "recognize_image/captured_image.jpg"
+    cv2.imwrite(capture_path, frame)
+
+    cap.release()
+
     interpreter = tf.lite.Interpreter(model_path="fruit_lite_model.tflite")
     interpreter.allocate_tensors()
 
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    image_path = "recognize_image/pineapple.jpg" #這裡要替換成拍照跟讀取
+    image_path = "recognize_image/pineapple.jpg" #這裡要替換成讀取拍照結果
     image = cv2.imread(image_path)
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
@@ -168,7 +178,7 @@ class CalorieCalculatorApp:
         result_label2 = ttk.Label(root2, text="")
         result_label3 = ttk.Label(root2, text="")
 
-        image_path = "recognize_image/apple.jpg"
+        image_path = "recognize_image/apple.jpg" #修改成讀取拍照的路徑
         image = Image.open(image_path)
         image = image.resize((500, 500), Image.Resampling.LANCZOS)
 
