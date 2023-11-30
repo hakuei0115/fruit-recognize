@@ -6,7 +6,7 @@ from keras.models import load_model
 model = load_model("fruit.h5")
 
 # 加載測試圖像
-image_path = "recognize_image/apple.jpg"  # 替換成您的測試圖像路徑
+image_path = "recognize_image/captured_image.jpg"  # 替換成您的測試圖像路徑
 image = cv2.imread(image_path)  # 使用圖像處理庫讀取圖片
 
 # 對圖片進行像素值的歸一化處理，使其在0到1之間
@@ -30,6 +30,17 @@ predicted_class = np.argmax(predictions, axis=1)
 
 # 使用反向映射找到原始標籤
 predicted_label = int_to_label[predicted_class[0]]
+
+# 顯示預測的類別和機率
+print(f"Predicted class: {predicted_label}")
+print("Prediction probabilities:")
+for label, prob in zip(int_to_label.values(), predictions[0]):
+    prob_percentage = prob * 100
+    print(f"{label}: {prob_percentage:.2f}%")
+
+threshold = 0.85  # 設置預測標籤的門檻值
+if predictions[0, predicted_class[0]] < threshold:
+    predicted_label = "Unknown"
 
 # 在圖像上繪製預測結果
 cv2.putText(image, f"Predicted: {predicted_label}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
