@@ -63,7 +63,7 @@ def Recognize_images():
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    image_path = "recognize_image/pineapple.jpg" #這裡要替換成讀取拍照結果
+    image_path = "recognize_image/captured_image.jpg" #這裡要替換成讀取拍照結果
     image = cv2.imread(image_path)
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
@@ -78,13 +78,15 @@ def Recognize_images():
     output_data = interpreter.get_tensor(output_details[0]['index'])
     predicted_class = np.argmax(output_data, axis=1)
 
+    predicted_probability = 0
+
     threshold = 0.85
     if output_data[0, predicted_class[0]] < threshold:
         predicted_label = "unknown"
     else:
         predicted_label = int_to_label[predicted_class[0]]
         predicted_probability = output_data[0, predicted_class[0]] * 100
-        
+    
     return predicted_label, predicted_probability
 
 class CalorieCalculatorApp:
@@ -171,8 +173,7 @@ class CalorieCalculatorApp:
         fake_weight = 150; #這裡改成測重
 
         fruit_result, fruit_probability = Recognize_images()
-
-        calories = self.calculator.calculate_calories(fruit_result, fake_weight)
+        probability_text = f"{fruit_probability:.2f}%"
 
         root2 = ttk.Toplevel(self.root)
         root2.title("Calorie Results")
@@ -183,7 +184,7 @@ class CalorieCalculatorApp:
         result_label2 = ttk.Label(root2, text="")
         result_label3 = ttk.Label(root2, text="")
 
-        image_path = "recognize_image/apple.jpg" #修改成讀取拍照的路徑
+        image_path = "recognize_image/pineapple.jpg" #修改成讀取拍照的路徑
         image = Image.open(image_path)
         image = image.resize((500, 500), Image.Resampling.LANCZOS)
 
@@ -191,17 +192,26 @@ class CalorieCalculatorApp:
         default_font = ImageFont.load_default()
         font_size = 36
         font = default_font.font_variant(size=font_size)
-        draw.text((10, 10), fruit_result, fill="red", font=font)
-        # draw.text((20, 20), fruit_probability, fill="red", font=font) #把預測機率話在圖上
+        if fruit_result == "unknown":
+            draw.text((10, 10), fruit_result, fill="red", font=font)
+        else:
+            draw.text((10, 10), fruit_result, fill="red", font=font)
+            draw.text((200, 10), probability_text, fill="red", font=font)
+            calories = self.calculator.calculate_calories(fruit_result, fake_weight)
 
         photo = ImageTk.PhotoImage(image)
         image_label = ttk.Label(root2, image=photo)
         image_label.image = photo
         image_label.grid(row=0, column=0, columnspan=2, padx=5, pady=20)
 
-        result_label.config(text=f"The recommended daily calorie intake is: {totalDailyEnergyExpenditure} kcal")
-        result_label2.config(text=f"The calories for {fruit_result} weighing {fake_weight} grams are: {calories} kcal")
-        result_label3.config(text=f"After eating this fruit, you need to take {totalDailyEnergyExpenditure - calories} kcal in daily calorie intake")
+        if fruit_result == "unknown":
+            result_label.config(text=f"The recommended daily calorie intake is: {totalDailyEnergyExpenditure} kcal")
+            result_label2.config(text=f"Can't recognize this fruit, but we can give you the weight is {fake_weight} grams")
+            result_label3.config(text=f"And you can search '100克的水果等於多少卡路里' to calculate.")
+        else:
+            result_label.config(text=f"The recommended daily calorie intake is: {totalDailyEnergyExpenditure} kcal")
+            result_label2.config(text=f"The calories for {fruit_result} weighing {fake_weight} grams are: {calories} kcal")
+            result_label3.config(text=f"After eating this fruit, you need to take {totalDailyEnergyExpenditure - calories} kcal in daily calorie intake")
         
         result_label.grid(row=1, column=0, columnspan=2, padx=5, pady=20)
         result_label2.grid(row=2, column=0, columnspan=2, padx=5, pady=20)
