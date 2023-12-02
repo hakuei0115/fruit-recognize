@@ -63,7 +63,7 @@ def Recognize_images():
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    image_path = "recognize_image/captured_image.jpg" #這裡要替換成讀取拍照結果
+    image_path = "recognize_image/apple.jpg" #這裡要替換成讀取拍照結果
     image = cv2.imread(image_path)
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
@@ -154,11 +154,8 @@ class CalorieCalculatorApp:
             messagebox.showerror("Error", "Please enter valid numbers for age, height, and weight.")
             return False
         else:
-            result = messagebox.askquestion("Make sure fruit put on the scales", "Does the fruit on the scales?")
-            if result == "yes":
-                self.on_calculate_button_click()
-            else:
-                return False
+            messagebox.showinfo("Put the fruit on the scales", "Make sure to put the fruit on the scales.")
+            self.on_calculate_button_click()
 
     def on_calculate_button_click(self):
         user_age = self.entry_age.get()
@@ -184,7 +181,7 @@ class CalorieCalculatorApp:
         result_label2 = ttk.Label(root2, text="")
         result_label3 = ttk.Label(root2, text="")
 
-        image_path = "recognize_image/pineapple.jpg" #修改成讀取拍照的路徑
+        image_path = "recognize_image/apple.jpg" #修改成讀取拍照的路徑
         image = Image.open(image_path)
         image = image.resize((500, 500), Image.Resampling.LANCZOS)
 
