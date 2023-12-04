@@ -117,27 +117,43 @@ class CalorieCalculatorApp:
         extremely_active_radio = ttk.Radiobutton(root, text="長時間運動或體力勞動工作", variable=self.activity_var, value="Extremely active")
         submit_button = ttk.Button(root, bootstyle=("primary", "outline-toolbutton"), text="Calculate TDEE And put fruit on scales", command=self.submit_button_click)
 
+        # 設置列和行的權重
+        root.columnconfigure(0, weight=1)
+        root.columnconfigure(1, weight=1)
+        root.columnconfigure(2, weight=1)
+        root.columnconfigure(3, weight=1)
+        root.columnconfigure(4, weight=1)
+
+        root.rowconfigure(0, weight=1)
+        root.rowconfigure(1, weight=1)
+        root.rowconfigure(2, weight=1)
+        root.rowconfigure(3, weight=1)
+        root.rowconfigure(4, weight=1)
+        root.rowconfigure(5, weight=1)
+        root.rowconfigure(6, weight=1)
+
         # 放置 GUI 元件
-        label_age.grid(row=0, column=0, padx=5, pady=10)
-        self.entry_age.grid(row=0, column=1, columnspan=4, padx=5, pady=10)
+        label_age.grid(row=0, column=0, padx=5, pady=10, sticky="e")
+        self.entry_age.grid(row=0, column=1, columnspan=4, padx=5, pady=10, sticky="we")
 
-        label_gender.grid(row=1, column=0, padx=5, pady=10)
-        male_radio.grid(row=1, column=1, padx=5, pady=10)
-        female_radio.grid(row=1, column=2, padx=5, pady=10)
+        label_gender.grid(row=1, column=0, padx=5, pady=10, sticky="e")
+        male_radio.grid(row=1, column=1, padx=5, pady=10, sticky="w")
+        female_radio.grid(row=1, column=2, padx=5, pady=10, sticky="w")
 
-        label_height.grid(row=2, column=0, padx=5, pady=10)
-        self.entry_height.grid(row=2, column=1,columnspan=4, padx=5, pady=10)
+        label_height.grid(row=2, column=0, padx=5, pady=10, sticky="e")
+        self.entry_height.grid(row=2, column=1, columnspan=4, padx=5, pady=10, sticky="we")
 
-        label_weight.grid(row=3, column=0, padx=5, pady=10)
-        self.entry_weight.grid(row=3, column=1,columnspan=4, padx=5, pady=10)
+        label_weight.grid(row=3, column=0, padx=5, pady=10, sticky="e")
+        self.entry_weight.grid(row=3, column=1, columnspan=4, padx=5, pady=10, sticky="we")
 
-        label_activity.grid(row=4, column=0, padx=5, pady=10)
-        sedentary_radio.grid(row=4, column=1, padx=5, pady=10)
-        lightly_active_radio.grid(row=4, column=2, padx=5, pady=10)
-        moderately_active_radio.grid(row=4, column=3, padx=5, pady=10)
-        very_active_radio.grid(row=5, column=1, padx=5, pady=10)
-        extremely_active_radio.grid(row=5, column=2, padx=5, pady=10)
-        submit_button.grid(row=6, column=0, columnspan=5, pady=20)
+        label_activity.grid(row=4, column=0, padx=5, pady=10, sticky="e")
+        sedentary_radio.grid(row=4, column=1, padx=5, pady=10, sticky="w")
+        lightly_active_radio.grid(row=4, column=2, padx=5, pady=10, sticky="w")
+        moderately_active_radio.grid(row=4, column=3, padx=5, pady=10, sticky="w")
+        very_active_radio.grid(row=5, column=1, padx=5, pady=10, sticky="w")
+        extremely_active_radio.grid(row=5, column=2, padx=5, pady=10, sticky="w")
+
+        submit_button.grid(row=6, column=0, columnspan=5, pady=20, sticky="we")
 
     def submit_button_click(self):
         user_age = self.entry_age.get()
@@ -199,7 +215,7 @@ class CalorieCalculatorApp:
         photo = ImageTk.PhotoImage(image)
         image_label = ttk.Label(root2, image=photo)
         image_label.image = photo
-        image_label.grid(row=0, column=0, columnspan=2, padx=5, pady=20)
+        image_label.grid(row=0, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
 
         if fruit_result == "unknown":
             result_label.config(text=f"The recommended daily calorie intake is: {totalDailyEnergyExpenditure} kcal")
@@ -209,10 +225,18 @@ class CalorieCalculatorApp:
             result_label.config(text=f"The recommended daily calorie intake is: {totalDailyEnergyExpenditure} kcal")
             result_label2.config(text=f"The calories for {fruit_result} weighing {fake_weight} grams are: {calories} kcal")
             result_label3.config(text=f"After eating this fruit, you need to take {totalDailyEnergyExpenditure - calories} kcal in daily calorie intake")
+
+        # 設置列和行的權重
+        root2.columnconfigure(0, weight=1)
+        root2.columnconfigure(1, weight=1)
+        root2.rowconfigure(0, weight=1)
+        root2.rowconfigure(1, weight=1)
+        root2.rowconfigure(2, weight=1)
+        root2.rowconfigure(3, weight=1)
         
-        result_label.grid(row=1, column=0, columnspan=2, padx=5, pady=20)
-        result_label2.grid(row=2, column=0, columnspan=2, padx=5, pady=20)
-        result_label3.grid(row=3, column=0, columnspan=2, padx=5, pady=20)
+        result_label.grid(row=1, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
+        result_label2.grid(row=2, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
+        result_label3.grid(row=3, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
 
 if __name__ == "__main__":
     calculator = CalorieCalculator()
@@ -223,5 +247,6 @@ if __name__ == "__main__":
         resizable=None,
         alpha=1.0,
     )
+    root.geometry("1080x800")
     app = CalorieCalculatorApp(root, calculator)
     root.mainloop()
