@@ -2,7 +2,7 @@ import tensorflow as tf
 from keras.models import load_model
 
 # 載入訓練好的 Keras 模型
-model = load_model("fruit.h5")
+model = load_model("fruit.keras")
 
 # 創建一個轉換器
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
