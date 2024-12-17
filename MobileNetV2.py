@@ -1,59 +1,129 @@
 import numpy as np
 import tensorflow as tf
-import pickle
-from keras.layers import Input, Dense, GlobalAveragePooling2D
+from keras.layers import GlobalAveragePooling2D, Dense, Dropout
 from keras.applications import MobileNetV2
 from keras.models import Model
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
+from keras.callbacks import EarlyStopping
+import pickle
+import matplotlib.pyplot as plt
+from model.Adaptive_Particle_Grey_Wolf_Optimization import APGWO
 
-# 載入預處理後的數據
-with open("preprocessed_data.pkl", "rb") as file:
-    data = pickle.load(file)
+# 載入數據並進行預處理
+def load_and_preprocess_data(file_path, test_size=0.2, random_state=42):
+    with open(file_path, "rb") as file:
+        data = pickle.load(file)
 
-images = data['X_train']  # 使用訓練集的圖片
-labels = data['y_train']  # 使用訓練集的標籤
+    images, labels = data['X_train'], data['y_train']
+    label_to_int = {label: i for i, label in enumerate(np.unique(labels))}
+    int_labels = np.array([label_to_int[label] for label in labels])
+    one_hot_labels = to_categorical(int_labels, num_classes=len(label_to_int))
 
-# 創建標籤到整數的映射
-label_to_int = {label: i for i, label in enumerate(np.unique(labels))}
+    X_train, X_val, y_train, y_val = train_test_split(images, one_hot_labels, test_size=test_size, random_state=random_state)
+    return X_train, X_val, y_train, y_val, label_to_int
 
-# 使用映射將標籤轉換為整數
-int_labels = np.array([label_to_int[label] for label in labels])
+# 創建 MobileNetV2 模型
+def create_model(learning_rate, dense_neurons, input_shape, num_classes):
+    base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=input_shape)
+    for layer in base_model.layers:
+        layer.trainable = False
+    
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(dense_neurons, activation='relu')(x)
+    x = Dropout(0.5)(x)
+    predictions = Dense(num_classes, activation='softmax')(x)
 
-# 將整數標籤進行獨熱編碼
-one_hot_labels = to_categorical(int_labels, num_classes=len(label_to_int))
+    model = Model(inputs=base_model.input, outputs=predictions)
+    model.compile(optimizer=Adam(learning_rate=learning_rate), loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
 
-# 分割數據集為訓練集和驗證集
-X_train, X_val, y_train, y_val = train_test_split(images, one_hot_labels, test_size=0.2, random_state=42)
+# 目標函數
+def objective_function(params, label_to_int, X_train, y_train, X_val, y_val):
+    learning_rate, dense_neurons = params
+    dense_neurons = int(dense_neurons)
+    model = create_model(learning_rate, dense_neurons, (224, 224, 3), num_classes=len(label_to_int))
+    val_loss = train_model(model, X_train, y_train, X_val, y_val, epochs=5)
+    return val_loss
 
-# 創建MobileNetV2模型（不包含頂部的全連接層）
-base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+# 訓練模型並返回驗證損失
+def train_model(model, X_train, y_train, X_val, y_val, batch_size=32, epochs=5):
+    history = model.fit(
+        X_train,
+        y_train,
+        batch_size=batch_size,
+        epochs=epochs,
+        verbose=0,
+        validation_data=(X_val, y_val)
+    )
+    
+    return history.history['val_loss'][-1]
 
-# 添加自定義頂部全連接層
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-x = Dense(1024, activation='relu')(x)
-predictions = Dense(len(label_to_int), activation='softmax')(x)
+# 完整訓練模型並繪製曲線
+def train_final_model(model, X_train, y_train, X_val, y_val, batch_size=32, epochs=200):
+    early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+    
+    history = model.fit(
+        X_train,
+        y_train,
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_data=(X_val, y_val),
+        callbacks=[early_stopping]
+    )
 
-# 定義完整的模型
-model = Model(inputs=base_model.input, outputs=predictions)
+    # 繪製學習曲線
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Training Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.title('Model Accuracy')
+    plt.legend()
 
-# 凍結MobileNetV2的層
-for layer in base_model.layers:
-    layer.trainable = False
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.title('Model Loss')
+    plt.legend()
+    plt.show()
+    return model
 
-# 編譯模型
-model.compile(optimizer=Adam(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+# 主程式
+if __name__ == "__main__":
+    # 固定隨機種子
+    np.random.seed(42)
+    tf.random.set_seed(42)
+    
+    X_train, X_val, y_train, y_val, label_to_int = load_and_preprocess_data("preprocessed_data.pkl")
+    
+    bounds = np.array([
+        [0.0001, 1e-5],
+        [256, 1024]
+    ])
+    
+    optimizer = APGWO(
+        obj_func=lambda params: objective_function(params, label_to_int, X_train, y_train, X_val, y_val),
+        dim=2,
+        pop_size=5,
+        max_iter=10,
+        bounds=bounds
+    )
+    
+    best_params, best_score = optimizer.optimize()
+    
+    print(f"最佳參數：學習率={best_params[0]}, Dense 神經元數={int(best_params[1])}")
+    
+    # 使用最佳參數進行完整訓練
+    learning_rate, dense_neurons = best_params[0], int(best_params[1])
 
-# 訓練模型
-batch_size = 32
-epochs = 10
-
-history = model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(X_val, y_val))
-
-# 顯示損失率和準確度
-loss, accuracy = model.evaluate(X_val, y_val)
-model.save("fruit.h5")
-print(f'損失率：{loss:.4f}')
-print(f'準確度：{accuracy * 100:.2f}%')
+    # 最終訓練
+    model = create_model(learning_rate, dense_neurons, (224, 224, 3), num_classes=len(label_to_int))
+    
+    model = train_final_model(model, X_train, y_train, X_val, y_val)
+    
+    loss, accuracy = model.evaluate(X_val, y_val)
+    model.save('fruit.keras')
+    print(f'最終驗證損失：{loss:.4f}')
+    print(f'最終驗證準確率：{accuracy * 100:.2f}%')
