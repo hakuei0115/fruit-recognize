@@ -2,3 +2,5 @@
 *.h5
 *.tflite
 /fruits-360
+/_pycache_
+*.pyc
