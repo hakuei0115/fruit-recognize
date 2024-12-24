@@ -12,7 +12,7 @@ def Recognize_images():
     output_details = interpreter.get_output_details()
 
     # 加載測試圖像
-    image_path = "recognize_image/pineapple.jpg"  # 替換成您的測試圖像路徑
+    image_path = "recognize_image/kiwi.jpg"  # 替換成您的測試圖像路徑
     image = cv2.imread(image_path)  # 使用圖像處理庫讀取圖片
 
     # 對圖片進行像素值的歸一化處理，使其在0到1之間
@@ -23,7 +23,7 @@ def Recognize_images():
     image = cv2.resize(image, (224, 224))  # 調整圖片大小
 
     # 創建標籤到整數的映射（與訓練時相同）
-    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange", "pineapple"])}  # 請替換成您的類別標籤
+    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "kiwi", "orange", "pineapple", "pitahaya"])}  # 請替換成您的類別標籤
 
     # 創建反向映射，將整數類別映射回原始標籤
     int_to_label = {i: label for label, i in label_to_int.items()}
