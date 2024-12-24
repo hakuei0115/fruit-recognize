@@ -120,7 +120,7 @@ def evaluate_model(model, X_val, y_val, label_to_int):
     # 計算並繪製混淆矩陣
     print("混淆矩陣：")
     cm = confusion_matrix(y_true_classes, y_pred_classes)
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(12, 10))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=int_to_label.values(), yticklabels=int_to_label.values())
     plt.ylabel('True Label')
     plt.xlabel('Predicted Label')

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from keras.layers import GlobalAveragePooling2D, Dense, Dropout
-from keras.applications import MobileNetV2
+from keras.applications import EfficientNetB0
 from keras.models import Model
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
@@ -29,9 +29,9 @@ def load_and_preprocess_data(file_path, test_size=0.2, random_state=42):
 
 # 創建 MobileNetV2 模型
 def create_model(learning_rate, dense_neurons, input_shape, num_classes):
-    base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=input_shape)
-    for layer in base_model.layers[:-20]: 
-        layer.trainable = True
+    base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=input_shape)
+    for layer in base_model.layers:
+        layer.trainable = False
     
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
