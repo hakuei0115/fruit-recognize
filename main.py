@@ -1,3 +1,10 @@
+# Copyright (c) 2025 Shu-Te University Bo-Rui Lin. All rights reserved.
+#
+# Unauthorized copying of this file, via any medium is strictly prohibited.
+# Proprietary and confidential.
+#
+# Written by Bo-Rui Lin king20010115@gmail.com, 2025.
+
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -196,7 +203,7 @@ class CalorieCalculatorApp:
         result_label2 = ttk.Label(root2, text="")
         result_label3 = ttk.Label(root2, text="")
 
-        image_path = "recognize_image/apple.jpg" #修改成讀取拍照的路徑
+        image_path = "recognize_image/captured_image.jpg" #修改成讀取拍照的路徑
         image = Image.open(image_path)
         image = image.resize((500, 500), Image.Resampling.LANCZOS)
 
