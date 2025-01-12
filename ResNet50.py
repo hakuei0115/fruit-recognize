@@ -30,7 +30,7 @@ def load_and_preprocess_data(file_path, test_size=0.2, random_state=42):
 # 創建 MobileNetV2 模型
 def create_model(learning_rate, dense_neurons, input_shape, num_classes):
     base_model = ResNet50V2(weights='imagenet', include_top=False, input_shape=input_shape)
-    for layer in base_model.layers:
+    for layer in base_model.layers: #
         layer.trainable = False
     
     x = base_model.output
