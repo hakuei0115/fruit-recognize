@@ -10,10 +10,12 @@ class CalorieCalculator:
         "apple": 46,
         "banana": 91,
         "guava": 37.3,
-        "bell-fruit": 35.6, #蓮霧
+        "bell-fruit": 35.6,
         "grape": 62.7,
         "orange": 41.8,
         "pineapple": 55.8,
+        "kiwi": 56,
+        "pitahaya": 55
     }
 
     def calculate_BMR(self, age, gender, height, weight):
@@ -21,7 +23,6 @@ class CalorieCalculator:
             return 66 + (13.7 * float(weight)) + (5 * float(height)) - (6.8 * float(age))
         else:
             return 655 + (9.6 * float(weight)) + (1.8 * float(height)) - (4.7 * float(age))
-        pass
 
     def calculate_TDEE(self, BMR, activity_level):
         if activity_level == "Sedentary":
@@ -34,7 +35,6 @@ class CalorieCalculator:
             return round(BMR * 1.725)
         elif activity_level == "Extremely active":
             return round(BMR * 1.9)
-        pass
 
     # 計算每克水果的卡路里函式
     def calculate_calories(self, fruit, weight):
@@ -44,18 +44,17 @@ class CalorieCalculator:
             return round(total_calories)
         else:
             return "Can't find calories for this fruit."
-        pass
 
 def Recognize_images():
-    # cap = cv2.VideoCapture(0)
-    # cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-    # ret, frame = cap.read()
+    ret, frame = cap.read()
 
-    # capture_path = "recognize_image/captured_image.jpg"
-    # cv2.imwrite(capture_path, frame)
+    capture_path = "recognize_image/captured_image.jpg"
+    cv2.imwrite(capture_path, frame)
 
-    # cap.release()
+    cap.release()
 
     interpreter = tf.lite.Interpreter(model_path="fruit_lite_model.tflite")
     interpreter.allocate_tensors()
@@ -63,12 +62,12 @@ def Recognize_images():
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    image_path = "recognize_image/apple.jpg" #這裡要替換成讀取拍照結果
+    image_path = "recognize_image/captured_image.jpg" #這裡要替換成讀取拍照結果
     image = cv2.imread(image_path)
     image = image.astype("float32") / 255.0
     image = cv2.resize(image, (224, 224))
 
-    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "orange", "pineapple"])}
+    label_to_int = {label: i for i, label in enumerate(["apple", "banana", "bell-fruit", "grape", "guava", "kiwi", "orange", "pineapple", "pitahaya"])}
     int_to_label = {i: label for label, i in label_to_int.items()}
 
     input_data = np.expand_dims(image, axis=0).astype(input_details[0]['dtype'])
